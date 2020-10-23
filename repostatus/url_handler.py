@@ -45,3 +45,8 @@ class URLHandler(object):
 
         return "{}{}".format(
                         self._BASE_URL, self._type_map[type].format(self.repo))
+
+    @property
+    def issue_url(self) -> str:
+        """Build an issue URL and return it"""
+        return self._build_url(type="issue")
