@@ -7,6 +7,7 @@ given repo and accordingly return the messages.
 from requests import get
 from simber import Logger
 from repostatus.url_handler import URLHandler
+from repostatus import Default
 
 from typing import List
 
@@ -57,7 +58,9 @@ def get_issue_comments(repo: str) -> List:
     # Every issues has a body message which will also be a comment
     # and some comments that were added after the base message
 
-    for issue in response.json():
+    issues_returned = response.json()[:Default.max_issue_iterate]
+
+    for issue in issues_returned:
         first_comment = issue["body"]
         other_comments = _get_comments_each(issue["comments_url"])
         comments.append(first_comment)
