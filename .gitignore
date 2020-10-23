@@ -1,0 +1,5 @@
+build/*
+dist/*
+repostatus.egg*
+repostatus/__pycache__/*
+tests/__pycache__/*

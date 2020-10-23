@@ -2,6 +2,11 @@
 
 from re import match
 
+from simber import Logger
+
+
+logger = Logger("url_handler")
+
 
 class URLHandler(object):
     """Handle dynamic creation of URL's for the GitHub API.
@@ -25,7 +30,7 @@ class URLHandler(object):
         is {username}/{reponame}
         """
         if not match(r'^[a-zA-Z0-9\-]*/[a-zA-Z0-9\-]*$', repo):
-            raise Exception("Invalid repo passed")
+            logger.critical("Invalid repo passed")
         return repo
 
     def _build_url(self, type: str) -> str:
@@ -36,6 +41,7 @@ class URLHandler(object):
         """
         # Check if type is valid
         if type not in list(self._type_map.keys()):
-            raise Exception("Invalid type passed to build")
+            logger.critical("Invalid type passed to build")
 
-        return "{}{}".format(self._BASE_URL, self._type_map(type))
+        return "{}{}".format(
+                        self._BASE_URL, self._type_map[type].format(self.repo))
