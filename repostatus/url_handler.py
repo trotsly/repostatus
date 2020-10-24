@@ -19,7 +19,8 @@ class URLHandler(object):
         self.repo = self._verify_repo(repo)
         self._BASE_URL = "https://api.github.com/"
         self._type_map = {
-            'issue': 'repos/{}/issues'
+            'issue': 'repos/{}/issues',
+            'pull': 'repos/{}/pulls'
         }
 
     def _verify_repo(self, repo: str) -> str:
@@ -50,3 +51,8 @@ class URLHandler(object):
     def issue_url(self) -> str:
         """Build an issue URL and return it"""
         return self._build_url(type="issue")
+
+    @property
+    def pull_url(self) -> str:
+        """Build an pull URL and return it"""
+        return self._build_url(type="pull")

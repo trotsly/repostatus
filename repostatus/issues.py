@@ -58,7 +58,10 @@ def get_issue_comments(repo: str) -> List:
     # Every issues has a body message which will also be a comment
     # and some comments that were added after the base message
 
-    issues_returned = response.json()[:Default.max_issue_iterate]
+    issues_returned = response.json()
+    logger.info("Got {} issues".format(len(issues_returned)))
+
+    issues_returned = issues_returned[:Default.max_issue_iterate]
 
     for issue in issues_returned:
         first_comment = issue["body"]
