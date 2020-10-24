@@ -1,8 +1,9 @@
 """Handle creation of the URL's"""
 
 from re import match
-
 from simber import Logger
+from requests.models import PreparedRequest
+from requests import Request
 
 
 logger = Logger("url_handler")
@@ -18,9 +19,20 @@ class URLHandler(object):
     def __init__(self, repo: str) -> None:
         self.repo = self._verify_repo(repo)
         self._BASE_URL = "https://api.github.com/"
+        self._HEADERS = {
+            'Accept': 'application/vnd.github.v3+json',
+        }
         self._type_map = {
-            'issue': 'repos/{}/issues',
-            'pull': 'repos/{}/pulls?state=all'
+            'issue': {
+                'url': 'repos/{}/issues',
+                'params': {}
+            },
+            'pull': {
+                'url': 'repos/{}/pulls',
+                'params': {
+                    'state': 'all'
+                }
+            }
         }
 
     def _verify_repo(self, repo: str) -> str:
@@ -34,25 +46,32 @@ class URLHandler(object):
             logger.critical("Invalid repo passed")
         return repo
 
-    def _build_url(self, type: str) -> str:
-        """Build an URL based on the type
-
-        Based on the type passed, build the URL accordingly
-        and return the str.
+    def _build_request(self, type: str) -> PreparedRequest:
+        """Build a request based on the passed type
+        and add necessary parameters and headers.
         """
-        # Check if type is valid
-        if type not in list(self._type_map.keys()):
-            logger.critical("Invalid type passed to build")
+        type_data = self._type_map.get(type, None)
+        if type_data is None:
+            logger.critical("Invalid url type passed")
 
-        return "{}{}".format(
-                        self._BASE_URL, self._type_map[type].format(self.repo))
+        request_url = "{}{}".format(
+                                self._BASE_URL,
+                                type_data["url"].format(self.repo))
+        request_params = type_data["params"]
+
+        prepared_request = Request(
+                            "GET",
+                            request_url,
+                            params=request_params,
+                            headers=self._HEADERS).prepare()
+        return prepared_request
 
     @property
-    def issue_url(self) -> str:
+    def issue_request(self) -> PreparedRequest:
         """Build an issue URL and return it"""
-        return self._build_url(type="issue")
+        return self._build_request(type="issue")
 
     @property
-    def pull_url(self) -> str:
+    def pull_request(self) -> PreparedRequest:
         """Build an pull URL and return it"""
-        return self._build_url(type="pull")
+        return self._build_request(type="pull")

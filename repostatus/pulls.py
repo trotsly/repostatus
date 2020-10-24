@@ -5,7 +5,7 @@ from the pull requests and accordingly return
 those.
 """
 
-from requests import get
+from requests import Session, get
 from simber import Logger
 from repostatus.url_handler import URLHandler
 
@@ -47,10 +47,10 @@ def get_pull_comments(repo: str) -> List:
     username: GitHub username
     reponame: GitHub reponame
     """
-    URL = URLHandler(repo).pull_url
+    request = URLHandler(repo).issue_request
     comments = []
 
-    response = get(URL)
+    response = Session().send(request)
 
     if response.status_code != 200:
         logger.critical("Invalid repo name")

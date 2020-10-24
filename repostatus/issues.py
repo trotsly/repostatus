@@ -4,7 +4,7 @@ Extract all the comments from the issues in the
 given repo and accordingly return the messages.
 """
 
-from requests import get
+from requests import Session, get
 from simber import Logger
 from repostatus.url_handler import URLHandler
 from repostatus import Default
@@ -25,7 +25,7 @@ def _get_comments_each(comment_url: str) -> List:
     response = get(comment_url)
     comments = []
 
-    if response.status_code != 200:
+    if response.status_code != 200 or not len(response.json()):
         return comments
 
     for comment in response.json():
@@ -47,10 +47,10 @@ def get_issue_comments(repo: str) -> List:
     username: GitHub username
     reponame: GitHub reponame
     """
-    URL = URLHandler(repo).issue_url
+    request = URLHandler(repo).issue_request
     comments = []
 
-    response = get(URL)
+    response = Session().send(request)
 
     if response.status_code != 200:
         logger.critical("Invalid repo name")
