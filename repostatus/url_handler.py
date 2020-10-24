@@ -4,6 +4,7 @@ from re import match
 from simber import Logger
 from requests.models import PreparedRequest
 from requests import Request
+from repostatus import Default
 
 
 logger = Logger("url_handler")
@@ -21,7 +22,8 @@ class URLHandler(object):
         self._BASE_URL = "https://api.github.com/"
         self._HEADERS = {
             'Accept': 'application/vnd.github.v3+json',
-            'User-Agent': 'repostatus'
+            'User-Agent': 'repostatus',
+            'Authorization': 'token {}'.format(Default.github_token)
         }
         self._type_map = {
             'issue': {

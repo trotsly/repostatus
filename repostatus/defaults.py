@@ -1,6 +1,7 @@
 """Handle all the default values used for
 functioning of the app
 """
+from os import environ
 
 
 class Default(object):
@@ -12,7 +13,12 @@ class Default(object):
     """
     def __init__(self) -> None:
         self._max_issue_iterate = 15
+        self._token = environ.get("GITHUB_TOKEN")
 
     @property
     def max_issue_iterate(self) -> int:
         return self._max_issue_iterate
+
+    @property
+    def github_token(self) -> str:
+        return self._token
