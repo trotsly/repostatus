@@ -47,7 +47,7 @@ def get_pull_comments(repo: str) -> List:
     username: GitHub username
     reponame: GitHub reponame
     """
-    request = URLHandler(repo).issue_request
+    request = URLHandler(repo).pull_request
     comments = []
 
     response = Session().send(request)
