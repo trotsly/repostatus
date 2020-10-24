@@ -53,7 +53,8 @@ def get_issue_comments(repo: str) -> List:
     response = Session().send(request)
 
     if response.status_code != 200:
-        logger.critical("Invalid repo name")
+        logger.critical("Response was not OK! Message returned: {}".format(
+            response.content))
 
     # Every issues has a body message which will also be a comment
     # and some comments that were added after the base message

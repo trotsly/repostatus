@@ -53,7 +53,8 @@ def get_pull_comments(repo: str) -> List:
     response = Session().send(request)
 
     if response.status_code != 200:
-        logger.critical("Invalid repo name")
+        logger.critical("Response was not OK! Message returned: {}".format(
+            response.content))
 
     # The pulls can have a body as well as other comments.
     # We will have to extract all of those into the list
