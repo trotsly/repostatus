@@ -20,7 +20,7 @@ class URLHandler(object):
         self._BASE_URL = "https://api.github.com/"
         self._type_map = {
             'issue': 'repos/{}/issues',
-            'pull': 'repos/{}/pulls'
+            'pull': 'repos/{}/pulls?state=all'
         }
 
     def _verify_repo(self, repo: str) -> str:
