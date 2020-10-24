@@ -21,6 +21,7 @@ class URLHandler(object):
         self._BASE_URL = "https://api.github.com/"
         self._HEADERS = {
             'Accept': 'application/vnd.github.v3+json',
+            'User-Agent': 'repostatus'
         }
         self._type_map = {
             'issue': {
