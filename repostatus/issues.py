@@ -22,7 +22,7 @@ def _get_comments_each(comment_url: str) -> List:
     Each issue has some comments excluding the one added when
     the issue was created.
     """
-    response = get(comment_url)
+    response = get(comment_url, headers=Default.token_header)
     comments = []
 
     if response.status_code != 200 or not len(response.json()):

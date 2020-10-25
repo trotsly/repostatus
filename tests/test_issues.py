@@ -5,6 +5,7 @@ from repostatus.issues import (
     _get_comments_each
 )
 from requests import get
+from repostatus import Default
 
 
 def test__get_comments_each():
@@ -17,7 +18,9 @@ def test__get_comments_each():
     comments_returned = _get_comments_each(repo_comments)
 
     # Manually extract the comments and check if the numbers are right
-    response = get(repo_comments)
+    response = get(
+        repo_comments,
+        headers={"Authorization": "token {}".format(Default.github_token)})
     comments_extracted = []
 
     comments_extracted = [comment["body"] for comment in response.json()]
@@ -40,7 +43,10 @@ def test_get_issue_comments():
 
     # Extract the comments manually. We will check if the description
     # of the first issue was extracted properly or not
-    first_issue_desc = get(url).json()[0]["body"]
+    first_issue_desc = get(
+        url,
+        headers={"Authorization": "token {}".format(Default.github_token)}
+    ).json()[0]["body"]
 
     first_issue_desc_ret = comments_returned[0]
 

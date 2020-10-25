@@ -8,6 +8,7 @@ those.
 from requests import Session, get
 from simber import Logger
 from repostatus.url_handler import URLHandler
+from repostatus import Default
 
 from typing import List
 
@@ -21,7 +22,7 @@ def _get_each_pull_comments(pull_url: str) -> List:
     Make a request to the given url and accordingly
     extract the comments of the given PR
     """
-    response = get(pull_url)
+    response = get(pull_url, headers=Default.token_header)
     comments = []
 
     if response.status_code != 200 or not len(response.json()):

@@ -5,6 +5,7 @@ from repostatus.pulls import (
     _get_each_pull_comments
 )
 from requests import get
+from repostatus import Default
 
 
 def test__get_each_pull_comments():
@@ -19,8 +20,11 @@ def test__get_each_pull_comments():
 
     # Extract the first comment of the issue manually and check
     # if it is the same.
-    second_comment = get(pull_url).json()[1]["body"]
-    second_comment_returned = comments_returned[1]
+    second_comment = get(
+        pull_url,
+        headers={"Authorization": "token {}".format(Default.github_token)}
+    ).json()[0]["body"]
+    second_comment_returned = comments_returned[0]
 
     assert second_comment == second_comment_returned, \
         "{}:{}, Should be same".format(second_comment, second_comment_returned)
@@ -39,7 +43,10 @@ def test_get_pull_comments():
 
     # Extract the comments manually. We will check if the description
     # of the first pull was extracted properly or not
-    first_pull_desc = get(url).json()[0]["body"]
+    first_pull_desc = get(
+        url,
+        headers={"Authorization": "token {}".format(Default.github_token)}
+    ).json()[0]["body"]
 
     first_pull_desc_ret = comments_returned[0]
 

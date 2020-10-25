@@ -2,6 +2,7 @@
 functioning of the app
 """
 from os import environ
+from typing import Dict
 
 
 class Default(object):
@@ -22,3 +23,9 @@ class Default(object):
     @property
     def github_token(self) -> str:
         return self._token
+
+    @property
+    def token_header(self) -> Dict:
+        return {
+            "Authorization": "token {}".format(self._token)
+        }
