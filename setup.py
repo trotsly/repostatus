@@ -9,7 +9,9 @@ with open("README.md", "r") as fh:
 
 req_pkgs = [
     'simber',
-    'requests'
+    'requests',
+    'Markdown',
+    'beautifulsoup4'
 ]
 
 
