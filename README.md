@@ -12,3 +12,15 @@ environ.set('GITHUB_TOKEN', '<your_token>')
 ```
 
 Otherwise, it can also be set through the rc file, i:e `zshrc, bashrc etc`
+
+## Tests
+
+For the tests, we are using [pytest](https://github.com/pytest-dev/pytest)
+
+If you wish to run the tests yourself, make sure you have it installed. The tests can be run by the following comand.
+
+```console
+pytest tests/test_* --no-summary --no-header -q
+```
+
+Above will show the output as to how many passed or failed.
