@@ -28,8 +28,7 @@ def _get_comments_each(comment_url: str) -> List:
     if response.status_code != 200 or not len(response.json()):
         return comments
 
-    for comment in response.json():
-        comments.append(comment["body"])
+    comments = [comment["body"] for comment in response.json()]
 
     return comments
 
