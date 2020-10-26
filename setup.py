@@ -11,7 +11,7 @@ req_pkgs = [
     'simber',
     'requests',
     'Markdown',
-    'beautifulsoup4'
+    'bs4'
 ]
 
 
