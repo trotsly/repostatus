@@ -1,6 +1,7 @@
 """Handle the server through various resources"""
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from uvicorn import run
 from typing import List
 
@@ -10,9 +11,21 @@ from repostatus import Default
 
 app = FastAPI()
 
+ORIGINS = [
+    "http://localhost:8080"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ORIGINS,
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"]
+)
+
 
 @app.get("/repos/{username}", response_model=List[Repo])
-async def get_repos(username: str):
+def get_repos(username: str):
     response = get_repo_list(
                     username=username,
                     access_token=Default.github_token)
