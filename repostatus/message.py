@@ -11,7 +11,7 @@ import requests
 import json
 import os
 
-client_token = os.environ.get('access_token')
+client_token = os.environ.get('GITHUB_TOKEN')
 
 headers = {"Authorization": "token {}".format(client_token)}
 
