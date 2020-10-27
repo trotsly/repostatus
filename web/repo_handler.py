@@ -12,7 +12,7 @@ from typing import List
 class Repo(BaseModel):
     name: str
     full_name: str
-    language: str
+    language: str = None
     stars: int
     url: str
 
@@ -43,11 +43,14 @@ def get_repo_list(username: str, access_token: str) -> RepoList:
     repos = []
     for repo in response.json():
         repos.append(Repo(
-            name=repo.name,
-            full_name=repo.full_name,
-            language=repo.language,
-            stars=repo.stargazers_count,
-            url=repo.html_url))
+            name=repo["name"],
+            full_name=repo["full_name"],
+            language=repo["language"],
+            stars=repo["stargazers_count"],
+            url=repo["html_url"]))
+
+    # Sort on the basis of stars
+    repos.sort(reverse=True, key=lambda repo: repo.stars)
 
     return RepoList(
         status=response.reason,
