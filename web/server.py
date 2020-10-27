@@ -2,14 +2,16 @@
 
 from fastapi import FastAPI
 from uvicorn import run
+from typing import List
 
-from repo_handler import RepoList, get_repo_list
+from repo_handler import get_repo_list, Repo
 from repostatus import Default
+
 
 app = FastAPI()
 
 
-@app.get("/repos/{username}", response_model=RepoList)
+@app.get("/repos/{username}", response_model=List[Repo])
 async def get_repos(username: str):
     response = get_repo_list(
                     username=username,

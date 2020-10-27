@@ -7,6 +7,7 @@ details etc will be handled through this module.
 from pydantic import BaseModel
 from requests import get
 from typing import List
+from fastapi import HTTPException
 
 
 class Repo(BaseModel):
@@ -17,12 +18,7 @@ class Repo(BaseModel):
     url: str
 
 
-class RepoList(BaseModel):
-    status: str
-    results: List[Repo]
-
-
-def get_repo_list(username: str, access_token: str) -> RepoList:
+def get_repo_list(username: str, access_token: str) -> List:
     """Get the list of public repos for the username
     passed.
 
@@ -35,10 +31,9 @@ def get_repo_list(username: str, access_token: str) -> RepoList:
         access_token)})
 
     if response.status_code != 200:
-        return RepoList(
-            status=response.reason,
-            results=[]
-        )
+        raise HTTPException(
+                status_code=response.status_code,
+                detail=response.reason)
 
     repos = []
     for repo in response.json():
@@ -52,7 +47,4 @@ def get_repo_list(username: str, access_token: str) -> RepoList:
     # Sort on the basis of stars
     repos.sort(reverse=True, key=lambda repo: repo.stars)
 
-    return RepoList(
-        status=response.reason,
-        results=repos
-    )
+    return repos
