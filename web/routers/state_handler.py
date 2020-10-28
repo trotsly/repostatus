@@ -6,14 +6,12 @@ which will have specific works
 
 from uuid import uuid4
 from fastapi.param_functions import Depends
-import jwt
-from pydantic import parse
 from pymongo import MongoClient
-from os import environ, stat
+from os import environ
 from simber import Logger
 from pydantic import BaseModel, parse_obj_as
 from fastapi import APIRouter, Header, HTTPException
-from typing import Dict, List, Optional
+from typing import Dict, List
 from jwt.exceptions import DecodeError
 
 from utils.sessionstate import SessionState
