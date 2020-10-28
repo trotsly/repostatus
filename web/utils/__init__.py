@@ -1,3 +1,5 @@
 __all__ = [
-    'sessionstate'
+    'sessionstate',
+    'github',
+    'auth_handler'
 ]

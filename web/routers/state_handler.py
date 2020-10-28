@@ -10,8 +10,11 @@ from os import environ
 from simber import Logger
 from pydantic import BaseModel
 from fastapi import APIRouter
+from typing import List
 
 from utils.sessionstate import SessionState
+from utils.github import get_username
+from repo_handler import Repo
 
 
 logger = Logger("state_handler")
@@ -25,6 +28,12 @@ db = client.repostatus
 
 class State(BaseModel):
     state: str
+
+
+class UserRepo(BaseModel):
+    state: str
+    username: str
+    repo: List(Repo) = []
 
 
 def create_state() -> str:
@@ -44,6 +53,10 @@ def create_state() -> str:
     db.sessionstate.insert_one(session_state.dict(by_alias=True))
 
     return State(state=unique_state)
+
+
+def get_user_and_repo():
+    pass
 
 
 @router.get("/", response_model=State)
