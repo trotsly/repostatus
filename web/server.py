@@ -1,6 +1,5 @@
 """Handle the server through various resources"""
 
-from os import stat
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from uvicorn import run

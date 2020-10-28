@@ -97,14 +97,14 @@ def get_user_and_repo(jwt_data: Dict) -> UserRepo:
     return user_repo
 
 
-@router.get("/", response_model=State)
+@router.get("", response_model=State)
 def get_state():
     state = create_state()
     return state
 
 
-@router.post("/", response_model=UserRepo)
-def get_content(authorization: Optional[str] = Header(None)):
+@router.post("", response_model=UserRepo)
+def get_content(authorization: str = Header(None)):
     try:
         content = get_jwt_content(authorization)
         user_repo = get_user_and_repo(content)
