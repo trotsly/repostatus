@@ -8,11 +8,12 @@ from pydantic import BaseModel
 from requests import get
 from typing import List, Optional
 from fastapi import HTTPException, APIRouter, Header
-from requests.api import head
+from simber import Logger
 
 from repostatus import Default
 
 router = APIRouter()
+logger = Logger("repo_handler")
 
 
 class Repo(BaseModel):
@@ -31,12 +32,14 @@ def get_repo_list(username: str, access_token: str) -> List:
     of the app to access all the public repos of the
     passed user.
     """
-    print(access_token)
     REPO_URL = "https://api.github.com/users/{}/repos".format(username)
     response = get(REPO_URL, headers={"Authorization": "token {}".format(
         access_token)})
 
     if response.status_code != 200:
+        logger.info("Response to {} returned with {}:{}".format(
+            REPO_URL, response.status_code, response.reason
+        ))
         raise HTTPException(
                 status_code=response.status_code,
                 detail=response.reason)
@@ -58,7 +61,6 @@ def get_repo_list(username: str, access_token: str) -> List:
 
 def extract_access_token(header_content: str) -> str:
     """Extract the token from the passed header string."""
-    print(header_content)
     return header_content.split()[1]
 
 
