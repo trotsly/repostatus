@@ -5,6 +5,7 @@ which will have specific works
 """
 
 from uuid import uuid4
+from fastapi.param_functions import Depends
 import jwt
 from pydantic import parse
 from pymongo import MongoClient
@@ -97,6 +98,13 @@ def get_user_and_repo(jwt_data: Dict) -> UserRepo:
     return user_repo
 
 
+def get_authorization_header(authorization: str = Header(None)):
+    """Verify if the authorization header is passed or not"""
+    if authorization is None:
+        raise HTTPException(status_code=401, detail="No token passed")
+    return authorization
+
+
 @router.get("", response_model=State)
 def get_state():
     state = create_state()
@@ -104,7 +112,7 @@ def get_state():
 
 
 @router.post("", response_model=UserRepo)
-def get_content(authorization: str = Header(None)):
+def get_content(authorization: str = Depends(get_authorization_header)):
     try:
         content = get_jwt_content(authorization)
         user_repo = get_user_and_repo(content)
