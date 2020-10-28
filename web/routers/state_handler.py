@@ -14,7 +14,7 @@ from typing import List
 
 from utils.sessionstate import SessionState
 from utils.github import get_username
-from repo_handler import Repo
+from routers.repo_handler import Repo
 
 
 logger = Logger("state_handler")
@@ -33,7 +33,7 @@ class State(BaseModel):
 class UserRepo(BaseModel):
     state: str
     username: str
-    repo: List(Repo) = []
+    repo: List[Repo] = []
 
 
 def create_state() -> str:
@@ -55,8 +55,12 @@ def create_state() -> str:
     return State(state=unique_state)
 
 
-def get_user_and_repo():
-    pass
+def get_user_and_repo(jwt_content) -> UserRepo:
+    """Extract the content from the jwt passed and accordingly
+    find the username and repo of the user and return.
+
+    if the token is wrong, raise an exception.
+    """
 
 
 @router.get("/", response_model=State)
