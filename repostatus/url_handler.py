@@ -37,7 +37,7 @@ class URLHandler(object):
                 }
             },
             'commit': {
-                'url': 'repos/{}/{}/commits',
+                'url': 'repos/{}/commits',
                 'params': {}
             }
         }
