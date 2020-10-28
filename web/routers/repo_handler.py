@@ -6,8 +6,9 @@ details etc will be handled through this module.
 
 from pydantic import BaseModel
 from requests import get
-from typing import List
-from fastapi import HTTPException, APIRouter
+from typing import List, Optional
+from fastapi import HTTPException, APIRouter, Header
+from requests.api import head
 
 from repostatus import Default
 
@@ -30,6 +31,7 @@ def get_repo_list(username: str, access_token: str) -> List:
     of the app to access all the public repos of the
     passed user.
     """
+    print(access_token)
     REPO_URL = "https://api.github.com/users/{}/repos".format(username)
     response = get(REPO_URL, headers={"Authorization": "token {}".format(
         access_token)})
@@ -54,9 +56,19 @@ def get_repo_list(username: str, access_token: str) -> List:
     return repos
 
 
+def extract_access_token(header_content: str) -> str:
+    """Extract the token from the passed header string."""
+    print(header_content)
+    return header_content.split()[1]
+
+
 @router.get("/{username}", response_model=List[Repo])
-def get_repos(username: str):
+def get_repos(username: str, authorization: Optional[str] = Header(None)):
+    # Try to extract the access token
+    access_token = Default.github_token if authorization is None \
+        else extract_access_token(authorization)
+
     response = get_repo_list(
                     username=username,
-                    access_token=Default.github_token)
+                    access_token=access_token)
     return response
