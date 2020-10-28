@@ -7,7 +7,11 @@ details etc will be handled through this module.
 from pydantic import BaseModel
 from requests import get
 from typing import List
-from fastapi import HTTPException
+from fastapi import HTTPException, APIRouter
+
+from repostatus import Default
+
+router = APIRouter()
 
 
 class Repo(BaseModel):
@@ -48,3 +52,11 @@ def get_repo_list(username: str, access_token: str) -> List:
     repos.sort(reverse=True, key=lambda repo: repo.stars)
 
     return repos
+
+
+@router.get("/{username}", response_model=List[Repo])
+def get_repos(username: str):
+    response = get_repo_list(
+                    username=username,
+                    access_token=Default.github_token)
+    return response

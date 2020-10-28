@@ -3,11 +3,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from uvicorn import run
-from typing import List
 
-from repo_handler import get_repo_list, Repo
-from repostatus import Default
-
+from routers import repo_handler
 
 app = FastAPI()
 
@@ -23,13 +20,11 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-
-@app.get("/repos/{username}", response_model=List[Repo])
-def get_repos(username: str):
-    response = get_repo_list(
-                    username=username,
-                    access_token=Default.github_token)
-    return response
+app.include_router(
+    repo_handler.router,
+    prefix="/repos",
+    tags=["routers"]
+)
 
 
 if __name__ == "__main__":
