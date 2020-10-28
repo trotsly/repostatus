@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from uvicorn import run
 
-from routers import repo_handler
+from routers import repo_handler, state_handler
 
 app = FastAPI()
 
@@ -24,6 +24,11 @@ app.include_router(
     repo_handler.router,
     prefix="/repos",
     tags=["routers"]
+)
+app.include_router(
+    state_handler.router,
+    prefix="/state",
+    tags=["state"]
 )
 
 

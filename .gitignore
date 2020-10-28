@@ -5,3 +5,4 @@ repostatus/__pycache__/*
 tests/__pycache__/*
 web/__pycache__/*
 web/routers/__pycache__/*
+__pycache__/
