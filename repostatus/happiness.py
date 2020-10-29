@@ -56,7 +56,7 @@ class Happiness(object):
             "issue": HappinessContainer(),
             "pull": HappinessContainer(),
             "commit": HappinessContainer()
-        },
+        }
         self.__overall_polarity = None
 
         # Call all the internal methods
@@ -71,15 +71,17 @@ class Happiness(object):
         """
         logger.info("Fetching content for each")
 
-        self.__happiness["issue"].data = get_issue_comments(self._repo,
-                                                            self._token)
-        self.__happiness["pull"].data = get_pull_comments(self._repo,
-                                                          self._token)
-        self.__happiness["commit"].data = get_commit(self._repo, self._token)
+        self.__happiness["issue"].data = get_issue_comments(self.__repo,
+                                                            self.__token)
+        self.__happiness["pull"].data = get_pull_comments(self.__repo,
+                                                          self.__token)
+        self.__happiness["commit"].data = get_commit(self.__repo, self.__token)
 
     def _filter_data(self):
         """Filter the fetched data and store it in the same
         container"""
+        logger.info("Filtering the data")
+
         for key in self.__happiness.keys():
             unfiltered_data = self.__happiness[key].data
             self.__happiness[key].data = filter(unfiltered_data)
@@ -87,6 +89,8 @@ class Happiness(object):
     def _get_polarity(self):
         """Get the polarity for each of the fethced and cleaned
         data."""
+        logger.info("Getting the polarity for each")
+
         for key in self.__happiness.keys():
             filtered_data = self.__happiness[key].data
             blob = TextBlob(" ".join(filtered_data))
@@ -96,8 +100,12 @@ class Happiness(object):
         """Calculate the overall polarity by concatenating all the
         data together and passing it to the blob.
         """
-        combined_data_list = [self.__happiness[key].data
-                              for key in self.__happiness]
+        logger.info("Calculating overall polarity")
+
+        combined_data_list = []
+        for key in self.__happiness:
+            combined_data_list.extend(self.__happiness[key].data)
+
         blob = TextBlob(" ".join(combined_data_list))
 
         self.__overall_polarity = blob.polarity
