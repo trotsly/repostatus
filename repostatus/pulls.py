@@ -7,7 +7,7 @@ those.
 
 from requests import Session, get
 from simber import Logger
-from repostatus.url_handler import URLHandler
+from repostatus.url_handler import URLHandler, update_header_token
 from repostatus import Default
 
 from typing import List
@@ -16,13 +16,14 @@ from typing import List
 logger = Logger("pulls")
 
 
-def _get_each_pull_comments(pull_url: str) -> List:
+def _get_each_pull_comments(pull_url: str, token: str = None) -> List:
     """Get the comments of each pull
 
     Make a request to the given url and accordingly
     extract the comments of the given PR
     """
-    response = get(pull_url, headers=Default.token_header)
+    access_token = Default.token_header if token is None else token
+    response = get(pull_url, headers=access_token)
     comments = []
 
     if response.status_code != 200 or not len(response.json()):
@@ -34,7 +35,7 @@ def _get_each_pull_comments(pull_url: str) -> List:
     return comments
 
 
-def get_pull_comments(repo: str) -> List:
+def get_pull_comments(repo: str, token: str = None) -> List:
     """Get the comments from the pull requests in
     the passed repo.
 
@@ -51,6 +52,9 @@ def get_pull_comments(repo: str) -> List:
     request = URLHandler(repo).pull_request
     comments = []
 
+    if token:
+        update_header_token(request, token)
+
     response = Session().send(request)
 
     if response.status_code != 200:
@@ -65,7 +69,7 @@ def get_pull_comments(repo: str) -> List:
 
     for pull in response.json():
         pull_body = pull["body"]
-        other_comments = _get_each_pull_comments(pull["comments_url"])
+        other_comments = _get_each_pull_comments(pull["comments_url"], token)
         comments.append(pull_body)
         comments.extend(other_comments)
 

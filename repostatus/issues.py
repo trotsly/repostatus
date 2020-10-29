@@ -6,7 +6,7 @@ given repo and accordingly return the messages.
 
 from requests import Session, get
 from simber import Logger
-from repostatus.url_handler import URLHandler
+from repostatus.url_handler import URLHandler, update_header_token
 from repostatus import Default
 
 from typing import List
@@ -15,14 +15,15 @@ from typing import List
 logger = Logger("issue")
 
 
-def _get_comments_each(comment_url: str) -> List:
+def _get_comments_each(comment_url: str, token: str = None) -> List:
     """Get the comments from the passed URL and return a
     list containing those.
 
     Each issue has some comments excluding the one added when
     the issue was created.
     """
-    response = get(comment_url, headers=Default.token_header)
+    access_token = Default.token_header if token is None else token
+    response = get(comment_url, headers=access_token)
     comments = []
 
     if response.status_code != 200 or not len(response.json()):
@@ -33,7 +34,7 @@ def _get_comments_each(comment_url: str) -> List:
     return comments
 
 
-def get_issue_comments(repo: str) -> List:
+def get_issue_comments(repo: str, token: str = None) -> List:
     """Get all the comments of the given repo
 
     Go through all the issues in the passed repo
@@ -48,6 +49,9 @@ def get_issue_comments(repo: str) -> List:
     """
     request = URLHandler(repo).issue_request
     comments = []
+
+    if token:
+        update_header_token(request, token)
 
     response = Session().send(request)
 
@@ -65,7 +69,7 @@ def get_issue_comments(repo: str) -> List:
 
     for issue in issues_returned:
         first_comment = issue["body"]
-        other_comments = _get_comments_each(issue["comments_url"])
+        other_comments = _get_comments_each(issue["comments_url"], token)
         comments.append(first_comment)
         comments.extend(other_comments)
 
