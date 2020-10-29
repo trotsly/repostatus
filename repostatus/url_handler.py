@@ -88,4 +88,13 @@ class URLHandler(object):
     @property
     def commit_request(self) -> PreparedRequest:
         """Build a commit URL and return it"""
-        return self._build_request(type="commit")    
+        return self._build_request(type="commit")
+
+
+def update_header_token(request: PreparedRequest, token: str) -> None:
+    """Update the access token in the passed request.
+
+    This will be used when the access is to a private repo.
+    """
+    request.headers["Authorization"] = "token {}".format(token)
+    return None

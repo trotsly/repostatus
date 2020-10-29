@@ -8,7 +8,7 @@ Date: 27/10/2020
 """
 
 from requests import Session
-from repostatus.url_handler import URLHandler
+from repostatus.url_handler import URLHandler, update_header_token
 from typing import List
 from simber import Logger
 
@@ -16,10 +16,13 @@ from simber import Logger
 logger = Logger("commits")
 
 
-def get_commit(commit_url) -> List:
+def get_commit(commit_url: str, token: str = None) -> List:
     """Use api to return the commits and the messages."""
     commits_request = URLHandler(commit_url).commit_request
     commits = []
+
+    if token:
+        update_header_token(commits_request, token)
 
     # We need to make the same request 5 times in order to
     # get 500 commit messages
