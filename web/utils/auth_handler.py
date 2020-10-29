@@ -5,9 +5,9 @@ from jwt import decode
 from jwt.exceptions import DecodeError
 from typing import Dict
 
-from config import Settings
+from config import get_settings
 
-CLIENT_SECRET = Settings().client_jwt_secret
+CLIENT_SECRET = get_settings().client_jwt_secret
 
 
 def _get_bearer(header: str) -> str:

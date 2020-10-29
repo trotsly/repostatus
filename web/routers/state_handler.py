@@ -17,13 +17,13 @@ from utils.sessionstate import SessionState
 from utils.github import get_username
 from routers.repo_handler import Repo, get_repo_list
 from utils.auth_handler import get_jwt_content
-from config import Settings
+from config import get_settings
 
 
 logger = Logger("state_handler")
 router = APIRouter()
 
-REPOSTATUSDB_URI = Settings().repostatusdb_uri
+REPOSTATUSDB_URI = get_settings().repostatusdb_uri
 
 client = MongoClient(REPOSTATUSDB_URI)
 db = client.repostatus
