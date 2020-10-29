@@ -7,7 +7,7 @@ from typing import Dict
 
 from config import get_settings
 
-CLIENT_SECRET = get_settings().client_jwt_secret
+CLIENT_SECRET = get_settings().client_jwt
 
 
 def _get_bearer(header: str) -> str:

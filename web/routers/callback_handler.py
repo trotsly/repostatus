@@ -11,7 +11,7 @@ from requests import post
 from config import get_settings
 from assets.html import get_html
 
-logger = Logger("callback_handler")
+logger = Logger("callback_handler", level="DEBUG")
 router = APIRouter()
 
 REPOSTATUSDB_URI = get_settings().repostatusdb_uri
@@ -34,9 +34,7 @@ def exchange_token(code: str, state: str) -> str:
     params = {
         "client_id": get_settings().client_id,
         "client_secret": get_settings().client_secret,
-        "code": code,
-        "redirect_uri": get_settings().redirect_uri,
-        "state": state
+        "code": code
     }
     headers = {
         "accept": "application/json"
@@ -48,7 +46,6 @@ def exchange_token(code: str, state: str) -> str:
         raise HTTPException(status_code=response.status_code,
                             detail=response.reason)
 
-    logger.debug(response.json())
     return response.json()["access_token"]
 
 
@@ -64,7 +61,7 @@ def get_access_token(code: str, state: str):
         raise HTTPException(status_code=403, detail="Invalid state passed")
 
     # If the state is verified, go ahead and get the access_token
-    access_token = get_access_token(code, state)
+    access_token = exchange_token(code, state)
 
     # Update the database with the token
     db.sessionstate.update_one({"state": state},

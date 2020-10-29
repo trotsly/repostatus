@@ -6,7 +6,7 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     repostatusdb_uri: str
-    client_jwt_secret: str
+    client_jwt: str
     client_secret: str
     client_id: str
     redirect_uri: str

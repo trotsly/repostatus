@@ -3,8 +3,8 @@ in the handling of the callback.
 """
 
 TYPE_MAP = {
-    "success": "success.html",
-    "failure": "failure.html"
+    "success": "assets/success.html",
+    "failure": "assets/failure.html"
 }
 
 
