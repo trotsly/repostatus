@@ -11,7 +11,8 @@ req_pkgs = [
     'simber',
     'requests',
     'Markdown',
-    'bs4'
+    'bs4',
+    'textblob'
 ]
 
 
