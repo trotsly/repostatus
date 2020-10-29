@@ -35,6 +35,12 @@ class URLHandler(object):
                 'params': {
                     'state': 'all'
                 }
+            },
+            'commit': {
+                'url': 'repos/{}/commits',
+                'params': {
+                    'per_page': 100,
+                }
             }
         }
 
@@ -78,3 +84,8 @@ class URLHandler(object):
     def pull_request(self) -> PreparedRequest:
         """Build an pull URL and return it"""
         return self._build_request(type="pull")
+
+    @property
+    def commit_request(self) -> PreparedRequest:
+        """Build a commit URL and return it"""
+        return self._build_request(type="commit")    
