@@ -21,7 +21,7 @@ class HappinessContainer(object):
     def __init__(self, data: List = [], polarity: float = None) -> None:
         self.__data = data
         self.__polarity = polarity
-        self.__emotion = ""
+        self.__emotion = self.__map_emotions(polarity)
 
     @property
     def data(self) -> List:
@@ -42,13 +42,32 @@ class HappinessContainer(object):
     @polarity.setter
     def polarity(self, value) -> None:
         self.__polarity = value
+        self.__emotion = self.__map_emotions(value)
 
     @emotion.setter
     def emotion(self, value: str) -> None:
         self.__emotion = value
 
     def __repr__(self) -> str:
-        return str(self.__polarity)
+        return "polarity: {}, emotion: {}".format(
+                                self.__polarity, self.__emotion)
+
+    def __map_emotions(self, polarity: float) -> str:
+        """Once the polarity calculations are done, we need to
+        map the numbers to a word that will make it easier for
+        users to understand.
+        """
+        if polarity is None:
+            return ""
+
+        if polarity < -0.5:
+            return "angry"
+        elif polarity < 0:
+            return "sad"
+        elif polarity < 0.2:
+            return "balanced"
+        else:
+            return "happy"
 
 
 class Happiness(object):
@@ -121,32 +140,11 @@ class Happiness(object):
         self.__overall_polarity.data = combined_data_list
         self.__overall_polarity.polarity = blob.polarity
 
-    def __map_emotions(self, polarity: float) -> str:
-        """Once the polarity calculations are done, we need to
-        map the numbers to a word that will make it easier for
-        users to understand.
+    def update_log_level(self, level: str) -> None:
+        """Update the log level of the logger based on user
+        input.
         """
-        if polarity < -0.5:
-            return "angry"
-        elif polarity < 0:
-            return "sad"
-        elif polarity < 0.2:
-            return "balanced"
-        else:
-            return "happy"
-
-    def __find_emotion(self):
-        """Find the emotion for each of the polarities calculated.
-        """
-        logger.debug("Finding emotions based on polarity")
-        for key in self.__happiness:
-            happness_container = self.__happiness[key]
-            happness_container.emotion = self.__map_emotions(
-                                            happness_container.polarity)
-
-        overall_hapiness = self.__overall_polarity
-        overall_hapiness.emotion = self.__map_emotions(
-                                    overall_hapiness.polarity)
+        logger.update_level(level)
 
     @property
     def issue(self) -> HappinessContainer:
