@@ -38,7 +38,9 @@ class URLHandler(object):
             },
             'commit': {
                 'url': 'repos/{}/commits',
-                'params': {}
+                'params': {
+                    'per_page': 100,
+                }
             }
         }
 

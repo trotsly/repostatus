@@ -7,29 +7,39 @@ Author:Vedant Baviskar
 Date: 27/10/2020
 """
 
-import requests
+from requests import Session
 from repostatus.url_handler import URLHandler
+from typing import List
+from simber import Logger
 
 
-"""Defining a function to get commits from the user repository."""
+logger = Logger("commits")
 
 
-def get_commit(commit_url) -> dict:
+def get_commit(commit_url) -> List:
     """Use api to return the commits and the messages."""
-    commits = URLHandler(commit_url).commit_request
-    response = requests.session().send(commits)
+    commits_request = URLHandler(commit_url).commit_request
+    commits = []
 
-    if response.status_code != 200:
-        print("Something went wrong")
+    # We need to make the same request 5 times in order to
+    # get 500 commit messages
+    for request_number in range(5):
+        commits_request.url += "&page={}".format(request_number + 1)
+        response = Session().send(commits_request)
 
-    fetched_commits = response.json()
-    for commit in fetched_commits:
-        return commit
+        if response.status_code != 200:
+            logger.warning("Failed fetching commits for page: {}".format(
+                request_number + 1))
+            continue
 
+        response = response.json()
+        commits_per_page = [commit["commit"]["message"] for commit in response]
 
-if __name__ == "__main__":
-    """Passing URL to get commits.
-    """
+        commits.extend(commits_per_page)
 
-    commit_url = input("Enter URL :- ")
-    get_commit(commit_url)
+        if len(commits_per_page) < 100:
+            # If the commit length was less than 500, seems like
+            # no more commits are available.
+            break
+
+    return commits
