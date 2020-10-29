@@ -161,5 +161,5 @@ class Happiness(object):
         return self.__happiness["commit"]
 
     @property
-    def happiness(self) -> float:
+    def happiness(self) -> HappinessContainer:
         return self.__overall_polarity
