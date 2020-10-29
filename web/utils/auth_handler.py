@@ -4,9 +4,10 @@ from re import sub
 from jwt import decode
 from jwt.exceptions import DecodeError
 from typing import Dict
-from os import environ
 
-CLIENT_SECRET = environ.get("CLIENT_SECRET")
+from config import Settings
+
+CLIENT_SECRET = Settings().client_jwt_secret
 
 
 def _get_bearer(header: str) -> str:

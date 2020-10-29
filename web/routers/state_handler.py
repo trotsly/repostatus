@@ -7,7 +7,6 @@ which will have specific works
 from uuid import uuid4
 from fastapi.param_functions import Depends
 from pymongo import MongoClient
-from os import environ
 from simber import Logger
 from pydantic import BaseModel, parse_obj_as
 from fastapi import APIRouter, Header, HTTPException
@@ -18,12 +17,13 @@ from utils.sessionstate import SessionState
 from utils.github import get_username
 from routers.repo_handler import Repo, get_repo_list
 from utils.auth_handler import get_jwt_content
+from config import Settings
 
 
 logger = Logger("state_handler")
 router = APIRouter()
 
-REPOSTATUSDB_URI = environ.get("REPOSTATUSDB_URI")
+REPOSTATUSDB_URI = Settings().repostatusdb_uri
 
 client = MongoClient(REPOSTATUSDB_URI)
 db = client.repostatus
