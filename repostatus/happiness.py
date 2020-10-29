@@ -79,7 +79,7 @@ class Happiness(object):
         """Fetch the data using various functions from
         different modules.
         """
-        logger.info("Fetching content for each")
+        logger.debug("Fetching content for each")
 
         self.__happiness["issue"].data = get_issue_comments(self.__repo,
                                                             self.__token)
@@ -90,7 +90,7 @@ class Happiness(object):
     def __filter_data(self):
         """Filter the fetched data and store it in the same
         container"""
-        logger.info("Filtering the data")
+        logger.debug("Filtering the data")
 
         for key in self.__happiness.keys():
             unfiltered_data = self.__happiness[key].data
@@ -99,7 +99,7 @@ class Happiness(object):
     def __get_polarity(self):
         """Get the polarity for each of the fethced and cleaned
         data."""
-        logger.info("Getting the polarity for each")
+        logger.debug("Getting the polarity for each")
 
         for key in self.__happiness.keys():
             filtered_data = self.__happiness[key].data
@@ -110,7 +110,7 @@ class Happiness(object):
         """Calculate the overall polarity by concatenating all the
         data together and passing it to the blob.
         """
-        logger.info("Calculating overall polarity")
+        logger.debug("Calculating overall polarity")
 
         combined_data_list = []
         for key in self.__happiness:
@@ -138,7 +138,7 @@ class Happiness(object):
     def __find_emotion(self):
         """Find the emotion for each of the polarities calculated.
         """
-        logger.info("Finding emotions based on polarity")
+        logger.debug("Finding emotions based on polarity")
         for key in self.__happiness:
             happness_container = self.__happiness[key]
             happness_container.emotion = self.__map_emotions(

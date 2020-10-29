@@ -63,7 +63,7 @@ def get_issue_comments(repo: str, token: str = None) -> List:
     # and some comments that were added after the base message
 
     issues_returned = response.json()
-    logger.info("Got {} issues".format(len(issues_returned)))
+    logger.debug("Got {} issues".format(len(issues_returned)))
 
     issues_returned = issues_returned[:Default.max_issue_iterate]
 

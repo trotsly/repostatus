@@ -65,7 +65,7 @@ def get_pull_comments(repo: str, token: str = None) -> List:
     # We will have to extract all of those into the list
 
     pulls_returned = response.json()
-    logger.info("Got {} pulls".format(len(pulls_returned)))
+    logger.debug("Got {} pulls".format(len(pulls_returned)))
 
     for pull in response.json():
         pull_body = pull["body"]
