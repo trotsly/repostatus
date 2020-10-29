@@ -77,7 +77,12 @@ class Happiness(object):
     This class will be exposed for use to the
     users.
     """
-    def __init__(self, repo: str, token: str = None) -> None:
+    def __init__(
+            self,
+            repo: str,
+            token: str = None,
+            log_level: str = None
+    ) -> None:
         self.__repo = repo
         self.__token = token
         self.__happiness = {
@@ -88,11 +93,11 @@ class Happiness(object):
         self.__overall_polarity = HappinessContainer()
 
         # Call all the internal methods
+        self.__update_log_level(log_level)
         self.__fetch_data()
         self.__filter_data()
         self.__get_polarity()
         self.__calculate_overall_polarity()
-        self.__find_emotion()
 
     def __fetch_data(self):
         """Fetch the data using various functions from
@@ -140,10 +145,13 @@ class Happiness(object):
         self.__overall_polarity.data = combined_data_list
         self.__overall_polarity.polarity = blob.polarity
 
-    def update_log_level(self, level: str) -> None:
+    def __update_log_level(self, level: str) -> None:
         """Update the log level of the logger based on user
         input.
         """
+        if level is None:
+            return
+
         logger.update_level(level)
 
     @property
