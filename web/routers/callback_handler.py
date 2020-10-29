@@ -2,12 +2,14 @@
 with completion of the oauth.
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import HTMLResponse
 from pymongo import MongoClient
 from simber import Logger
 from requests import post
 
 from config import get_settings
+from assets.html import get_html
 
 logger = Logger("callback_handler")
 router = APIRouter()
@@ -46,14 +48,8 @@ def exchange_token(code: str, state: str) -> str:
         raise HTTPException(status_code=response.status_code,
                             detail=response.reason)
 
+    logger.debug(response.json())
     return response.json()["access_token"]
-
-
-def generate_html() -> str:
-    """Generate the HTML that will close the users window with a
-    message.
-    """
-    pass
 
 
 def get_access_token(code: str, state: str):
@@ -75,4 +71,9 @@ def get_access_token(code: str, state: str):
                                {"$set": {"token": access_token}})
 
     # Return HTML that will close the window
-    return generate_html()
+    return get_html()
+
+
+@router.get("", response_class=HTMLResponse)
+def authenticate(code: str = Query(None), state: str = Query(None)):
+    return get_access_token(code, state)
