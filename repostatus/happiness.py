@@ -21,6 +21,7 @@ class HappinessContainer(object):
     def __init__(self, data: List = [], polarity: float = None) -> None:
         self.__data = data
         self.__polarity = polarity
+        self.__emotion = ""
 
     @property
     def data(self) -> List:
@@ -30,6 +31,10 @@ class HappinessContainer(object):
     def polarity(self) -> float:
         return self.__polarity
 
+    @property
+    def emotion(self) -> str:
+        return self.__emotion
+
     @data.setter
     def data(self, value) -> None:
         self.__data = value
@@ -37,6 +42,10 @@ class HappinessContainer(object):
     @polarity.setter
     def polarity(self, value) -> None:
         self.__polarity = value
+
+    @emotion.setter
+    def emotion(self, value: str) -> None:
+        self.__emotion = value
 
     def __repr__(self) -> str:
         return str(self.__polarity)
@@ -57,15 +66,16 @@ class Happiness(object):
             "pull": HappinessContainer(),
             "commit": HappinessContainer()
         }
-        self.__overall_polarity = None
+        self.__overall_polarity = HappinessContainer()
 
         # Call all the internal methods
-        self._fetch_data()
-        self._filter_data()
-        self._get_polarity()
-        self._calculate_overall_polarity()
+        self.__fetch_data()
+        self.__filter_data()
+        self.__get_polarity()
+        self.__calculate_overall_polarity()
+        self.__find_emotion()
 
-    def _fetch_data(self):
+    def __fetch_data(self):
         """Fetch the data using various functions from
         different modules.
         """
@@ -77,7 +87,7 @@ class Happiness(object):
                                                           self.__token)
         self.__happiness["commit"].data = get_commit(self.__repo, self.__token)
 
-    def _filter_data(self):
+    def __filter_data(self):
         """Filter the fetched data and store it in the same
         container"""
         logger.info("Filtering the data")
@@ -86,7 +96,7 @@ class Happiness(object):
             unfiltered_data = self.__happiness[key].data
             self.__happiness[key].data = filter(unfiltered_data)
 
-    def _get_polarity(self):
+    def __get_polarity(self):
         """Get the polarity for each of the fethced and cleaned
         data."""
         logger.info("Getting the polarity for each")
@@ -96,7 +106,7 @@ class Happiness(object):
             blob = TextBlob(" ".join(filtered_data))
             self.__happiness[key].polarity = blob.polarity
 
-    def _calculate_overall_polarity(self):
+    def __calculate_overall_polarity(self):
         """Calculate the overall polarity by concatenating all the
         data together and passing it to the blob.
         """
@@ -108,7 +118,35 @@ class Happiness(object):
 
         blob = TextBlob(" ".join(combined_data_list))
 
-        self.__overall_polarity = blob.polarity
+        self.__overall_polarity.data = combined_data_list
+        self.__overall_polarity.polarity = blob.polarity
+
+    def __map_emotions(self, polarity: float) -> str:
+        """Once the polarity calculations are done, we need to
+        map the numbers to a word that will make it easier for
+        users to understand.
+        """
+        if polarity < -0.5:
+            return "angry"
+        elif polarity < 0:
+            return "sad"
+        elif polarity < 0.2:
+            return "balanced"
+        else:
+            return "happy"
+
+    def __find_emotion(self):
+        """Find the emotion for each of the polarities calculated.
+        """
+        logger.info("Finding emotions based on polarity")
+        for key in self.__happiness:
+            happness_container = self.__happiness[key]
+            happness_container.emotion = self.__map_emotions(
+                                            happness_container.polarity)
+
+        overall_hapiness = self.__overall_polarity
+        overall_hapiness.emotion = self.__map_emotions(
+                                    overall_hapiness.polarity)
 
     @property
     def issue(self) -> HappinessContainer:
@@ -123,5 +161,5 @@ class Happiness(object):
         return self.__happiness["commit"]
 
     @property
-    def polarity(self) -> float:
+    def happiness(self) -> float:
         return self.__overall_polarity
