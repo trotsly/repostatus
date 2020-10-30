@@ -46,7 +46,7 @@ def exchange_token(code: str, state: str) -> str:
         raise HTTPException(status_code=response.status_code,
                             detail=response.reason)
 
-    return response.json()["access_token"]
+    return response.json()
 
 
 def get_access_token(code: str, state: str):
@@ -61,11 +61,13 @@ def get_access_token(code: str, state: str):
         raise HTTPException(status_code=403, detail="Invalid state passed")
 
     # If the state is verified, go ahead and get the access_token
-    access_token = exchange_token(code, state)
+    token_response = exchange_token(code, state)
+    token = token_response["access_token"]
+    scope = token_response["scope"]
 
     # Update the database with the token
     db.sessionstate.update_one({"state": state},
-                               {"$set": {"token": access_token}})
+                               {"$set": {"token": token, "scope": scope}})
 
     # Return HTML that will close the window
     return get_html()

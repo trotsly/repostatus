@@ -34,6 +34,7 @@ class SessionState(BaseModel):
     id: Optional[MongoObjectId] = Field(alias='_id')
     state: str
     token: str = None
+    scope: str = None
 
     class Config:
         arbitrary_types_allowed = True
