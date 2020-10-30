@@ -32,8 +32,14 @@ def get_repos_authenticated(token: str) -> List:
     the token.
     """
     REPO_URL = "https://api.github.com/user/repos"
-    response = get(REPO_URL, headers={"Authorization": "token {}".format(
-        token)})
+    HEADERS = {
+        "Authorization": "token {}".format(token),
+    }
+    PARAMS = {
+        "visibility": "all"
+    }
+
+    response = get(REPO_URL, headers=HEADERS, params=PARAMS)
 
     if response.status_code != 200:
         return []
