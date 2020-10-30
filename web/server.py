@@ -29,7 +29,7 @@ app.add_middleware(
 app.include_router(
     repo_handler.router,
     prefix="/repos",
-    tags=["routers"]
+    tags=["repos"]
 )
 app.include_router(
     state_handler.router,
@@ -44,7 +44,7 @@ app.include_router(
 app.include_router(
     status_handler.router,
     prefix="/status",
-    tags=["status", "repo", "happiness"]
+    tags=["status"]
 )
 
 

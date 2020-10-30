@@ -84,7 +84,7 @@ def get_parsed_data(happiness: Happiness):
         )
 
         # Update the response
-        status_object.key = StatusEach(
+        status_object[key] = StatusEach(
             data=happiness_data,
             polarity=happiness_obj.poalrity,
             emotion=happiness_emotion
@@ -115,10 +115,11 @@ def get_happiness(repo: str, token: str = None, state: str = None) -> Status:
 
 
 @router.get("", response_model=Status)
-def get_status(authorization: Optional[str] = Header(None),
-               x_state: Optional[str] = Header(None),
-               repo: str = Query) -> Status:
+def calculate_status(authorization: Optional[str] = Header(None),
+                     x_state: Optional[str] = Header(None),
+                     repo: str = Query(...)) -> Status:
     # If authorization is not None, try to extract the token
     token = get_token(authorization) if authorization is not None else None
 
-    return get_happiness(repo, token, x_state)
+    happiness = get_happiness(repo, token, x_state)
+    return happiness
