@@ -14,8 +14,8 @@ from typing import Dict, List
 from jwt.exceptions import DecodeError
 
 from utils.sessionstate import SessionState
-from utils.github import get_username
-from routers.repo_handler import Repo, get_repo_list
+from utils.github import get_username, get_repos_authenticated
+from routers.repo_handler import Repo
 from utils.auth_handler import get_jwt_content
 from config import get_settings
 
@@ -85,7 +85,7 @@ def get_user_and_repo(jwt_data: Dict) -> UserRepo:
     # Use the token to get the username
     token = session_state.token
     username_extracted = get_username(token)
-    repos = get_repo_list(username_extracted, token)
+    repos = get_repos_authenticated(token)
 
     user_repo = UserRepo(
         state=jwt_data["state"],
