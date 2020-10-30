@@ -36,7 +36,7 @@ class StatusEmotion(BaseModel):
 
 class StatusEach(BaseModel):
     data: StatusData
-    poalrity: float
+    polarity: float
     emotion: StatusEmotion
 
 
@@ -84,11 +84,11 @@ def get_parsed_data(happiness: Happiness):
         )
 
         # Update the response
-        status_object[key] = StatusEach(
+        setattr(status_object, key, StatusEach(
             data=happiness_data,
-            polarity=happiness_obj.poalrity,
+            polarity=happiness_obj.polarity,
             emotion=happiness_emotion
-        )
+        ))
 
     return status_object
 
