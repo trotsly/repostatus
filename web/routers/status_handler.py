@@ -5,11 +5,13 @@ status of the repo.
 from pydantic import BaseModel, parse_obj_as
 from pymongo import MongoClient
 from simber import Logger
-from fastapi import APIRouter, HTTPException
+from typing import Optional
+from fastapi import APIRouter, HTTPException, Header, Query
 
 from config import get_settings
 from utils.sessionstate import SessionState
 from repostatus.happiness import Happiness
+from utils.auth_handler import get_token
 
 
 logger = Logger("status_handler")
@@ -66,18 +68,27 @@ def get_parsed_data(happiness: Happiness):
     """Use the passed Hapiness object and create a proper
     returnable data for the response.
     """
-    issue = happiness.issue
-    commit = happiness.commit
-    pull = happiness.pull
-    total = happiness.happiness
-
+    happiness_dict = happiness.to_dict()
     status_object = Status()
 
-    status_object.issue = StatusEach(
-        data=StatusData(
-            char=issue.chars, word=issue.words, sentence=issue.sentences),
-        
-    )
+    for key in happiness_dict:
+        happiness_obj = happiness_dict[key]
+        happiness_data = StatusData(
+            char=happiness_obj.chars,
+            word=happiness_obj.words,
+            sentence=happiness_obj.sentences
+        )
+        happiness_emotion = StatusEmotion(
+            text=happiness_obj.emotion,
+            emoji=""
+        )
+
+        # Update the response
+        status_object.key = StatusEach(
+            data=happiness_data,
+            polarity=happiness_obj.poalrity,
+            emotion=happiness_emotion
+        )
 
     return status_object
 
@@ -97,3 +108,17 @@ def get_happiness(repo: str, token: str = None, state: str = None) -> Status:
 
     # TODO: Handle the below with an exception
     status = Happiness(repo, token)
+
+    response_created = get_parsed_data(status)
+
+    return response_created
+
+
+@router.get("", response_model=Status)
+def get_status(authorization: Optional[str] = Header(None),
+               x_state: Optional[str] = Header(None),
+               repo: str = Query) -> Status:
+    # If authorization is not None, try to extract the token
+    token = get_token(authorization) if authorization is not None else None
+
+    return get_happiness(repo, token, x_state)

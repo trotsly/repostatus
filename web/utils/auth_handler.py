@@ -26,6 +26,18 @@ def _get_bearer(header: str) -> str:
     return None
 
 
+def get_token(header: str) -> str:
+    """Extract the token from the authorization header."""
+    content = header.split(",")
+
+    for c in content:
+        stripped_c = sub(r'^[ ]{1,}', '', c).split()
+        if stripped_c[0] == 'token':
+            return stripped_c[1]
+
+    return None
+
+
 def get_jwt_content(header_content: str) -> Dict:
     """Extract the content from the JWT and accordingly
     return the content.
