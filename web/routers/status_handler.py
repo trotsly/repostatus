@@ -41,10 +41,10 @@ class StatusEach(BaseModel):
 
 
 class Status(BaseModel):
-    issue: StatusEach
-    pull: StatusEach
-    commit: StatusEach
-    total: StatusEach
+    issue: StatusEach = None
+    pull: StatusEach = None
+    commit: StatusEach = None
+    total: StatusEach = None
 
 
 def get_token_from_state(state: str) -> str:

@@ -33,7 +33,7 @@ class HappinessContainer(object):
 
     @property
     def chars(self) -> int:
-        return len(" ".join(self.__data).split(""))
+        return len("".join(self.__data))
 
     @property
     def sentences(self) -> int:
