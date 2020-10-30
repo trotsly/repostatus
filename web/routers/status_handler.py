@@ -22,9 +22,9 @@ db = client.repostatus
 
 
 class StatusData(BaseModel):
-    length: int
-    words: int
-    sentences: int
+    char: int
+    word: int
+    sentence: int
 
 
 class StatusEmotion(BaseModel):
@@ -72,6 +72,12 @@ def get_parsed_data(happiness: Happiness):
     total = happiness.happiness
 
     status_object = Status()
+
+    status_object.issue = StatusEach(
+        data=StatusData(
+            char=issue.chars, word=issue.words, sentence=issue.sentences),
+        
+    )
 
     return status_object
 

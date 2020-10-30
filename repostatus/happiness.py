@@ -8,7 +8,7 @@ from repostatus.issues import get_issue_comments
 from repostatus.pulls import get_pull_comments
 from repostatus.message import get_commit
 from simber import Logger
-from typing import List
+from typing import List, Dict
 
 
 logger = Logger("happiness")
@@ -26,6 +26,18 @@ class HappinessContainer(object):
     @property
     def data(self) -> List:
         return self.__data
+
+    @property
+    def words(self) -> int:
+        return len(self.__data)
+
+    @property
+    def chars(self) -> int:
+        return len(" ".join(self.__data).split(""))
+
+    @property
+    def sentences(self) -> int:
+        return len(" ".join(self.__data).split("\n"))
 
     @property
     def polarity(self) -> float:
@@ -153,6 +165,15 @@ class Happiness(object):
             return
 
         logger.update_level(level)
+
+    def to_dict(self) -> Dict:
+        """Return a dictionary of all the properties"""
+        return {
+            "issue": self.issue,
+            "pull": self.pull,
+            "commit": self.commit,
+            "total": self.happiness
+        }
 
     @property
     def issue(self) -> HappinessContainer:
