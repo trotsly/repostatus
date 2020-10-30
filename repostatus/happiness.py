@@ -22,6 +22,7 @@ class HappinessContainer(object):
         self.__data = data
         self.__polarity = polarity
         self.__emotion = self.__map_emotions(polarity)
+        self.__data_compiled = None
 
     @property
     def data(self) -> List:
@@ -29,15 +30,21 @@ class HappinessContainer(object):
 
     @property
     def words(self) -> int:
-        return len(self.__data)
+        return len(self.data_compiled.split(" "))
 
     @property
     def chars(self) -> int:
-        return len("".join(self.__data))
+        return len(self.data_compiled)
 
     @property
     def sentences(self) -> int:
-        return len(" ".join(self.__data).split("\n"))
+        return len(self.data_compiled.split("\n"))
+
+    @property
+    def data_compiled(self) -> str:
+        if not self.__data_compiled:
+            self.__data_compiled = " ".join(self.data)
+        return self.__data_compiled
 
     @property
     def polarity(self) -> float:
