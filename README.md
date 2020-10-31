@@ -24,3 +24,16 @@ pytest tests/test_* --no-summary --no-header -q
 ```
 
 Above will show the output as to how many passed or failed.
+
+## Setup Repostatus
+
+`repostatus` expects a `.env` file in the `~/.cache/repostatus/` directory. The web API expects an `.env` file in the `web` directory.
+
+`~/.cache/repostatus/.env` should be the following way:
+
+```
+CLIENT_ID=
+CLIENT_SECRET=
+```
+
+Contents of the `.env` file required by FastAPI can be checked in the `config.py` file.
