@@ -13,7 +13,7 @@ from fastapi import APIRouter, Header, HTTPException
 from typing import Dict, List
 from jwt.exceptions import DecodeError
 
-from utils.sessionstate import SessionState
+from utils.repostatus import SessionState
 from utils.github import get_username, get_repos_authenticated
 from routers.repo_handler import Repo
 from utils.auth_handler import get_jwt_content

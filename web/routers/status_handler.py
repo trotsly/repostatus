@@ -9,7 +9,7 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException, Header, Query
 
 from config import get_settings
-from utils.sessionstate import SessionState
+from utils.repostatus import SessionState
 from repostatus.happiness import Happiness
 from utils.auth_handler import get_token
 

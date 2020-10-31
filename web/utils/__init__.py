@@ -1,5 +1,5 @@
 __all__ = [
-    'sessionstate',
+    'repostatus',
     'github',
     'auth_handler'
 ]
