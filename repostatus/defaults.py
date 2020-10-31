@@ -5,8 +5,9 @@ from os import environ, getenv
 from typing import Dict
 from base64 import b64encode
 from dotenv import load_dotenv
+from pathlib import Path
 
-load_dotenv()
+load_dotenv(Path("~/.cache/repostatus/.env").expanduser())
 
 
 class Default(object):
