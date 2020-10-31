@@ -36,7 +36,8 @@ def get_repos_authenticated(token: str) -> List:
         "Authorization": "token {}".format(token),
     }
     PARAMS = {
-        "visibility": "all"
+        "visibility": "all",
+        "per_page": 100
     }
 
     response = get(REPO_URL, headers=HEADERS, params=PARAMS)
