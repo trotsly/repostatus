@@ -8,7 +8,10 @@ from repostatus.issues import get_issue_comments
 from repostatus.pulls import get_pull_comments
 from repostatus.message import get_commit
 from simber import Logger
+from requests import Session
 from typing import List, Dict
+
+from repostatus.url_handler import URLHandler, update_header_token
 
 
 logger = Logger("happiness")
@@ -118,10 +121,27 @@ class Happiness(object):
         self.__get_polarity()
         self.__calculate_overall_polarity()
 
+    def __repo_exists(self) -> bool:
+        """Check if the repo exists or not. If it does not
+        exist, raise an exception stating that it does not
+        exist or is inaccessible"""
+        check_request = URLHandler(self.__repo).check_request
+
+        if self.__token:
+            update_header_token(check_request, self.__token)
+
+        response = Session().send(check_request)
+
+        return True if response.status_code == 200 else False
+
     def __fetch_data(self):
         """Fetch the data using various functions from
         different modules.
         """
+        # Raise exception if repo does not exist
+        if not self.__repo_exists():
+            raise Exception("Repo does not exist")
+
         logger.debug("Fetching content for each")
 
         self.__happiness["issue"].data = get_issue_comments(self.__repo,

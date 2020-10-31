@@ -106,8 +106,11 @@ def get_happiness(repo: str, token: str = None, state: str = None) -> Status:
     if state:
         token = get_token_from_state(state)
 
-    # TODO: Handle the below with an exception
-    status = Happiness(repo, token)
+    try:
+        status = Happiness(repo, token)
+    except Exception:
+        raise HTTPException(status_code=404,
+                            detail="Repo not found or inaccessible")
 
     response_created = get_parsed_data(status)
 

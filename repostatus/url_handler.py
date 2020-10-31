@@ -41,6 +41,10 @@ class URLHandler(object):
                 'params': {
                     'per_page': 100,
                 }
+            },
+            'check': {
+                'url': 'repos/{}',
+                'params': {}
             }
         }
 
@@ -89,6 +93,11 @@ class URLHandler(object):
     def commit_request(self) -> PreparedRequest:
         """Build a commit URL and return it"""
         return self._build_request(type="commit")
+
+    @property
+    def check_request(self) -> PreparedRequest:
+        """Build a request for checking if the repo exists"""
+        return self._build_request(type="check")
 
 
 def update_header_token(request: PreparedRequest, token: str) -> None:
