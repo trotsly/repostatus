@@ -12,7 +12,8 @@ req_pkgs = [
     'requests',
     'Markdown',
     'bs4',
-    'textblob'
+    'textblob',
+    'python-dotenv'
 ]
 
 

@@ -1,8 +1,12 @@
 """Handle all the default values used for
 functioning of the app
 """
-from os import environ
+from os import environ, getenv
 from typing import Dict
+from base64 import b64encode
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class Default(object):
@@ -15,6 +19,8 @@ class Default(object):
     def __init__(self) -> None:
         self._max_issue_iterate = 15
         self._token = environ.get("GITHUB_TOKEN")
+        self.__client_id = getenv("CLIENT_ID")
+        self.__client_secret = getenv("CLIENT_SECRET")
 
     @property
     def max_issue_iterate(self) -> int:
@@ -25,7 +31,13 @@ class Default(object):
         return self._token
 
     @property
+    def basic_token(self) -> str:
+        basic_token = "{}:{}".format(self.__client_id, self.__client_secret)
+        basic_token = b64encode(basic_token.encode("ascii"))
+        return basic_token.decode("ascii")
+
+    @property
     def token_header(self) -> Dict:
         return {
-            "Authorization": "token {}".format(self._token)
+            "Authorization": "Basic {}".format(self.basic_token)
         }

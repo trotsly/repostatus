@@ -5,7 +5,7 @@ status of the repo.
 from pydantic import BaseModel, parse_obj_as
 from pymongo import MongoClient
 from simber import Logger
-from typing import Optional
+from typing import Optional, Union
 from fastapi import APIRouter, HTTPException, Header, Query
 
 from config import get_settings
