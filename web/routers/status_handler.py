@@ -105,12 +105,12 @@ def get_cached_response(repo: str, token: str):
         return None
 
     if matched_response["is_public"]:
-        return matched_response
+        return matched_response["response"]
 
     # If the repo is not private, we need to make sure the token is
     # same
     if matched_response["token"] == token:
-        return matched_response
+        return matched_response["response"]
 
     return None
 
@@ -118,7 +118,7 @@ def get_cached_response(repo: str, token: str):
 def store_cached_response(repo: str, token: str, response: Status):
     """Store the repo response in the database."""
     is_public = is_repo_public(repo)
-    response_dict = response.dict()
+    response_dict = response.dict(by_alias=True)
 
     db.cached_responses.insert_one({
         "repo": repo,
@@ -146,7 +146,7 @@ def get_happiness(repo: str, token: str = None, state: str = None) -> Status:
     cached_response = get_cached_response(repo, token)
 
     if cached_response is not None:
-        return parse_obj_as(cached_response, Status)
+        return parse_obj_as(Status, cached_response)
 
     try:
         status = Happiness(repo, token)
