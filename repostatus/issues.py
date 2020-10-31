@@ -9,13 +9,13 @@ from simber import Logger
 from repostatus.url_handler import URLHandler, update_header_token
 from repostatus import Default
 
-from typing import List
+from typing import List, Dict
 
 
 logger = Logger("issue")
 
 
-def _get_comments_each(comment_url: str, token: str = None) -> List:
+def _get_comments_each(comment_url: str, token: Dict = None) -> List:
     """Get the comments from the passed URL and return a
     list containing those.
 
@@ -70,7 +70,8 @@ def get_issue_comments(repo: str, token: str = None) -> List:
 
     for issue in issues_returned:
         first_comment = issue["body"]
-        other_comments = _get_comments_each(issue["comments_url"], token)
+        other_comments = _get_comments_each(issue["comments_url"],
+                                            request.headers)
         comments.append(first_comment)
         comments.extend(other_comments)
 

@@ -10,13 +10,13 @@ from simber import Logger
 from repostatus.url_handler import URLHandler, update_header_token
 from repostatus import Default
 
-from typing import List
+from typing import List, Dict
 
 
 logger = Logger("pulls")
 
 
-def _get_each_pull_comments(pull_url: str, token: str = None) -> List:
+def _get_each_pull_comments(pull_url: str, token: Dict = None) -> List:
     """Get the comments of each pull
 
     Make a request to the given url and accordingly
@@ -69,7 +69,8 @@ def get_pull_comments(repo: str, token: str = None) -> List:
 
     for pull in response.json():
         pull_body = pull["body"]
-        other_comments = _get_each_pull_comments(pull["comments_url"], token)
+        other_comments = _get_each_pull_comments(pull["comments_url"],
+                                                 request.headers)
         comments.append(pull_body)
         comments.extend(other_comments)
 
