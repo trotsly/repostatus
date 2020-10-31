@@ -5,6 +5,9 @@ to get GitHub related data.
 from requests import get
 from routers.repo_handler import Repo
 from typing import List
+from requests import Session
+
+from repostatus.url_handler import URLHandler
 
 
 def get_username(token: str) -> str:
@@ -58,3 +61,11 @@ def get_repos_authenticated(token: str) -> List:
     repos.sort(reverse=True, key=lambda repo: repo.stars)
 
     return repos
+
+
+def is_repo_public(repo: str) -> bool:
+    """Check if the passed repo is public or not."""
+    check_request = URLHandler(repo).check_request
+    response = Session().send(check_request)
+
+    return True if response.status_code == 200 else False

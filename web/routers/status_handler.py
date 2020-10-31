@@ -5,13 +5,15 @@ status of the repo.
 from pydantic import BaseModel, parse_obj_as
 from pymongo import MongoClient
 from simber import Logger
-from typing import Optional, Union
+from typing import Optional
+from datetime import datetime
 from fastapi import APIRouter, HTTPException, Header, Query
 
 from config import get_settings
 from utils.repostatus import SessionState
 from repostatus.happiness import Happiness
 from utils.auth_handler import get_token
+from utils.github import is_repo_public
 
 
 logger = Logger("status_handler")
@@ -93,6 +95,40 @@ def get_parsed_data(happiness: Happiness):
     return status_object
 
 
+def get_cached_response(repo: str, token: str):
+    """Check the database to see if cached response is
+    available.
+    """
+    matched_response = db.cached_responses.find_one({"repo": repo})
+
+    if matched_response is None:
+        return None
+
+    if matched_response["is_public"]:
+        return matched_response
+
+    # If the repo is not private, we need to make sure the token is
+    # same
+    if matched_response["token"] == token:
+        return matched_response
+
+    return None
+
+
+def store_cached_response(repo: str, token: str, response: Status):
+    """Store the repo response in the database."""
+    is_public = is_repo_public(repo)
+    response_dict = response.dict()
+
+    db.cached_responses.insert_one({
+        "repo": repo,
+        "is_public": is_public,
+        "response": response_dict,
+        "token": token,
+        "date": datetime.utcnow()
+    })
+
+
 def get_happiness(repo: str, token: str = None, state: str = None) -> Status:
     """Calculate the happiness of the passed repo.
 
@@ -106,6 +142,12 @@ def get_happiness(repo: str, token: str = None, state: str = None) -> Status:
     if state:
         token = get_token_from_state(state)
 
+    # Check if cached response is available
+    cached_response = get_cached_response(repo, token)
+
+    if cached_response is not None:
+        return parse_obj_as(cached_response, Status)
+
     try:
         status = Happiness(repo, token)
     except Exception:
@@ -113,6 +155,9 @@ def get_happiness(repo: str, token: str = None, state: str = None) -> Status:
                             detail="Repo not found or inaccessible")
 
     response_created = get_parsed_data(status)
+
+    # Cache the response
+    store_cached_response(repo, token, response_created)
 
     return response_created
 
