@@ -23,7 +23,7 @@ class URLHandler(object):
         self._HEADERS = {
             'Accept': 'application/vnd.github.v3+json',
             'User-Agent': 'repostatus',
-            'Authorization': 'token {}'.format(Default.github_token)
+            'Authorization': 'Basic {}'.format(Default.basic_token)
         }
         self._type_map = {
             'issue': {

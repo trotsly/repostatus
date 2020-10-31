@@ -64,6 +64,7 @@ def get_issue_comments(repo: str, token: str = None) -> List:
 
     issues_returned = response.json()
     logger.debug("Got {} issues".format(len(issues_returned)))
+    logger.debug("Using header {}".format(request.headers))
 
     issues_returned = issues_returned[:Default.max_issue_iterate]
 

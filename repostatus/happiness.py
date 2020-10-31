@@ -140,6 +140,8 @@ class Happiness(object):
         if self.__token:
             update_header_token(check_request, self.__token)
 
+        logger.debug(check_request.headers)
+
         response = Session().send(check_request)
 
         return True if response.status_code == 200 else False
