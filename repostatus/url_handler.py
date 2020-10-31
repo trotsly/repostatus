@@ -56,7 +56,9 @@ class URLHandler(object):
         is {username}/{reponame}
         """
         if not match(r'^[a-zA-Z0-9\-]*/[a-zA-Z0-9\-]*$', repo):
-            logger.critical("Invalid repo passed")
+            logger.debug("Invalid repo passed")
+            raise Exception("Invalid repo")
+
         return repo
 
     def _build_request(self, type: str) -> PreparedRequest:
