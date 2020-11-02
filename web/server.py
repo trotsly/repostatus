@@ -8,7 +8,8 @@ from routers import (
     repo_handler,
     state_handler,
     callback_handler,
-    status_handler
+    status_handler,
+    badge_handler
 )
 
 app = FastAPI()
@@ -45,6 +46,11 @@ app.include_router(
     status_handler.router,
     prefix="/status",
     tags=["status"]
+)
+app.include_router(
+    badge_handler.router,
+    prefix="/badge",
+    tags=["badge"]
 )
 
 

@@ -34,7 +34,7 @@ class StatusData(BaseModel):
 class StatusEmotion(BaseModel):
     text: str
     color: str
-    name: str
+    color_name: str
 
 
 class StatusEach(BaseModel):
@@ -84,7 +84,7 @@ def get_parsed_data(happiness: Happiness):
         happiness_emotion = StatusEmotion(
             text=happiness_obj.emotion,
             color=happiness_obj.color,
-            name=happiness_obj.color_name
+            color_name=happiness_obj.color_name
         )
 
         # Update the response
