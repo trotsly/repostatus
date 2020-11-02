@@ -2,7 +2,6 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from uvicorn import run
 
 from routers import (
     repo_handler,
@@ -52,7 +51,3 @@ app.include_router(
     prefix="/badge",
     tags=["badge"]
 )
-
-
-if __name__ == "__main__":
-    run("server:app", host="0.0.0.0", port=5000, log_level="info")
