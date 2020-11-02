@@ -27,10 +27,22 @@ class HappinessContainer(object):
         self.__emotion = self.__map_emotions(polarity)
         self.__data_compiled = None
         self.__color_emotion_map = {
-            "angry": "#F44336",
-            "sad": "#E29578",
-            "happy": "#83C5BE",
-            "balanced": "#006D77"
+            "angry": {
+                "hex": "#F44336",
+                "name": "red"
+            },
+            "sad": {
+                "hex": "#E29578",
+                "name": "orange"
+            },
+            "happy": {
+                "hex": "#83C5BE",
+                "name": "green"
+            },
+            "balanced": {
+                "hex": "#006D77",
+                "name": "blue"
+            }
         }
 
     @property
@@ -65,7 +77,11 @@ class HappinessContainer(object):
 
     @property
     def color(self) -> str:
-        return self.__color_emotion_map.get(self.__emotion, "")
+        return self.__color_emotion_map.get(self.__emotion, "").get("hex", "")
+
+    @property
+    def color_name(self) -> str:
+        return self.__color_emotion_map.get(self.__emotion, "").get("name", "")
 
     @data.setter
     def data(self, value) -> None:
