@@ -15,7 +15,8 @@ app = FastAPI()
 
 
 ORIGINS = [
-    "http://localhost:8080"
+    "http://localhost:8080",
+    "https://deepjyoti30.dev"
 ]
 
 app.add_middleware(
