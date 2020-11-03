@@ -16,7 +16,7 @@ app = FastAPI(docs_url=None, redoc_url=None)
 
 ORIGINS = [
     "http://localhost:8080",
-    "https://deepjyoti30.dev"
+    "https://repostatus.deepjyoti30.dev"
 ]
 
 app.add_middleware(
