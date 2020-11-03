@@ -6,7 +6,7 @@ details etc will be handled through this module.
 
 from pydantic import BaseModel
 from requests import get
-from typing import List, Optional
+from typing import List, Optional, Dict
 from fastapi import HTTPException, APIRouter, Header
 from simber import Logger
 
@@ -24,7 +24,7 @@ class Repo(BaseModel):
     url: str
 
 
-def get_repo_list(username: str, access_token: str) -> List:
+def get_repo_list(username: str, headers: Dict) -> List:
     """Get the list of public repos for the username
     passed.
 
@@ -33,8 +33,7 @@ def get_repo_list(username: str, access_token: str) -> List:
     passed user.
     """
     REPO_URL = "https://api.github.com/users/{}/repos".format(username)
-    response = get(REPO_URL, headers={"Authorization": "token {}".format(
-        access_token)})
+    response = get(REPO_URL, headers=headers)
 
     if response.status_code != 200:
         logger.info("Response to {} returned with {}:{}".format(
@@ -67,10 +66,13 @@ def extract_access_token(header_content: str) -> str:
 @router.get("/{username}", response_model=List[Repo])
 def get_repos(username: str, authorization: Optional[str] = Header(None)):
     # Try to extract the access token
-    access_token = Default.github_token if authorization is None \
-        else extract_access_token(authorization)
+    header = Default.token_header
+
+    if authorization:
+        access_token = extract_access_token(authorization)
+        header["Authorizaation"] = "token {}".format(access_token)
 
     response = get_repo_list(
                     username=username,
-                    access_token=access_token)
+                    headers=header)
     return response

@@ -11,7 +11,7 @@ from routers import (
     badge_handler
 )
 
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None)
 
 
 ORIGINS = [
