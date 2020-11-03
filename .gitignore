@@ -7,4 +7,3 @@ web/__pycache__/*
 web/routers/__pycache__/*
 __pycache__/
 .env
-Dockerfile
