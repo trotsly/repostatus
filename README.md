@@ -2,6 +2,8 @@
 
 Backend for [repostatus](https://repostatus.deepjyoti30.dev). Repostatus lets you calculate the happiness status of your repository.
 
+<img src="https://apis.deepjyoti30.dev/repostatus/badge?repo=trotsly%2Frepostatus&style=for-the-badge" alt="Status of repostatus">
+
 ## Setup
 
 You'll need to setup an environ variable named `GITHUB_TOKEN` that will contain an access token. In order to get the token, follow [this](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) article and accordingly save it to the environment.
