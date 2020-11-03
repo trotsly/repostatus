@@ -7,7 +7,7 @@ from base64 import b64encode
 from dotenv import load_dotenv
 from pathlib import Path
 
-load_dotenv(Path("~/.cache/repostatus/.env").expanduser())
+load_dotenv(Path("../.env").expanduser())
 
 
 class Default(object):
