@@ -39,6 +39,7 @@ def get_repo_list(username: str, headers: Dict) -> List:
         logger.info("Response to {} returned with {}:{}".format(
             REPO_URL, response.status_code, response.reason
         ))
+        logger.info("passed headers were {}".format(headers))
         raise HTTPException(
                 status_code=response.status_code,
                 detail=response.reason)
@@ -70,7 +71,7 @@ def get_repos(username: str, authorization: Optional[str] = Header(None)):
 
     if authorization:
         access_token = extract_access_token(authorization)
-        header["Authorizaation"] = "token {}".format(access_token)
+        header["Authorization"] = "token {}".format(access_token)
 
     response = get_repo_list(
                     username=username,
