@@ -14,4 +14,4 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.KEY }}
-          script: cd repostatus && git pull origin master && docker build -t repostatus ./ && docker rm repostatus0 && docker run -d --name repostatus0 -p 5055:5055 repostatus
+          script: cd repostatus && git pull origin master && docker build -t repostatus ./ && docker stop repostatus0 && docker rm repostatus0 && docker run -d --name repostatus0 -p 5055:5055 repostatus
