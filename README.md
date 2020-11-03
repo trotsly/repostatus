@@ -1,8 +1,13 @@
-# repostatus
+<div align="center">
+<img src=".github/logo_large.png" alt="repostatus logo">
+<br>
+<br>
+<h2><i>Get Happiness status of your repo</i></h2>
+<br><br>
+<img src="https://apis.deepjyoti30.dev/repostatus/badge?repo=trotsly%2Frepostatus&style=for-the-badge" alt="Status of repostatus">
+</div>
 
 Backend for [repostatus](https://repostatus.deepjyoti30.dev). Repostatus lets you calculate the happiness status of your repository.
-
-<img src="https://apis.deepjyoti30.dev/repostatus/badge?repo=trotsly%2Frepostatus&style=for-the-badge" alt="Status of repostatus">
 
 ## Setup
 
