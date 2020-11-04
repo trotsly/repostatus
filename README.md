@@ -9,6 +9,10 @@
 
 Backend for [repostatus](https://repostatus.deepjyoti30.dev). Repostatus lets you calculate the happiness status of your repository.
 
+## What we do?
+
+We consider various parts of the repo like commit messages, comments on issues, pulls etc and run a sentiment analysis engine on the data in order to find out the happiens status.
+
 ## Setup
 
 You'll need to setup an environ variable named `GITHUB_TOKEN` that will contain an access token. In order to get the token, follow [this](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) article and accordingly save it to the environment.
