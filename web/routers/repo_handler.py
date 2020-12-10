@@ -33,7 +33,12 @@ def get_repo_list(username: str, headers: Dict) -> List:
     passed user.
     """
     REPO_URL = "https://api.github.com/users/{}/repos".format(username)
-    response = get(REPO_URL, headers=headers)
+
+    # Inject a per_page count in the query
+    params = {}
+    params["per_page"] = 100
+
+    response = get(REPO_URL, headers=headers, params=params)
 
     if response.status_code != 200:
         logger.info("Response to {} returned with {}:{}".format(
