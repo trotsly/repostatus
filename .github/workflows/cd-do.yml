@@ -1,6 +1,9 @@
 name: CD
 
-on: [push]
+on:
+  push:
+    branches:
+      - "workflow"
 
 jobs:
   push-to-docker:
