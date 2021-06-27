@@ -9,8 +9,9 @@ RUN cd app && python setup.py install
 # Install dependencies
 RUN cd app/web && pip install -r requirements.txt
 
-# Install uvicorn
-RUN pip install uvicorn
+# Install uvicorn and other tools
+RUN pip install uvicorn gunicorn uvloop httptools
 
-WORKDIR app/web/
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "5055", "--access-log"]
+WORKDIR /app/web/
+
+CMD ["gunicorn", "server:app", "--bind", "0.0.0.0:5055", "--reload", "--workers=6", "-k", "uvicorn.workers.UvicornWorker" , "--access-logfile", "-"]
