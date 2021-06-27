@@ -25,3 +25,16 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/trotsly/repostatus-api:latest
+
+  deploy:
+    needs: push-to-docker
+    runs-on: ubuntu-latest
+    steps:
+      # SSH into the server
+      - name: SSH into server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: /bin/bash Scripts/deploy_repostatus_api.sh ghcr.io/trotsly/repostatus-api:latest
