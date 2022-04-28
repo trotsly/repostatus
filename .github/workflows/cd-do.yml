@@ -37,4 +37,4 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.KEY }}
-          script: /bin/bash Scripts/deploy_repostatus_api.sh ghcr.io/trotsly/repostatus-api:latest
+          script: /bin/bash Scripts/deploy_repostatus.sh ghcr.io/trotsly/repostatus-api:latest
